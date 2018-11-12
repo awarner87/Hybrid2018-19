@@ -39,13 +39,19 @@ if(strcmp(x,'NV'))
     m1 = m0;
     i = 1;
     bool_maxVel = 0;
+    bool_rail = 0;
     maximumVelocity = 0;
+    velocityAtLaunchRail = 0;
     %Numerically iterate until maximum height is reached
     while v >= 0
+        if(h >= 60 && bool_rail == 0)
+            velocityAtLaunchRail = v;
+            bool_rail = 1;
+        end
         if(m1 > m_dry) %There is still propellent to be burned
             m2 = m1;
             m1 = m1 + mdot*dt;
-            v = v - c*log(m1/m2) - g *((m2 - m1)/ mdot);
+            v = v - c*log(m1/m2) - 1.2*g *((m2 - m1)/ mdot);
         else %All propellent has been burned, maximum Velocity has been reached
             if(bool_maxVel == 0)
                 maximumVelocity = v;
@@ -76,6 +82,7 @@ if(strcmp(x,'NV'))
     fprintf('Assumed mass of propellent: %16.3f lb\n',m_prop);
     fprintf('Final Height: %33.3f ft\n',h_t(i));
     fprintf('Burn Time: %32.3f s\n',t_burn);
+    fprintf('Velocity at end of Launch Rail: %13.3f ft/s\n',velocityAtLaunchRail);
     fprintf('Maximum Velocity Reached: %19.3f ft/s\n\n',maximumVelocity);
     fprintf('Thrust: %37.3f lbf\n',F_thrust);
     fprintf('Total Impulse: %31.3f lbf\n',totalImpulse);
