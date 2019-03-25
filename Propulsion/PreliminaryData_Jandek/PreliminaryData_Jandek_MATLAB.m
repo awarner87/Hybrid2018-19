@@ -10,7 +10,7 @@ clc;
 clear;
 
 fprintf('This program can run a simulation for non-varying and varying paremeters\n');
-x = input('Enter  NV to run the simulation for 1 set of variables or V to run it with multiple sets: ', 's');
+x = input('Enter NV to run the simulation for 1 set of variables or V to run it with multiple sets: ', 's');
 
 %% Simulation without varying paremeters
 if(strcmp(x,'NV'))

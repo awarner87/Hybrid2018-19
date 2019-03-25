@@ -30,8 +30,8 @@ Dp0 = Dp0_start:Dp0_step:Dp0_end;                           %intial port diamete
 t = linspace(0,t_burn,k);                                   %time vector
 dt = t(2)-t(1);                                             %time step
 mox_dot = linspace(mdot_peak,(2*mdot_avg-mdot_peak),k+1);   %linear mass flow rate model
-Dp = reshape(repmat(0*t,1,length(Dp0)),[k,length(Dp0)])';   %2D vector of diameter at time t for each intial diameter
-Dp = [Dp zeros(length(Dp0),1)];                             %Adds spot for intial diameter to matrix
+Dp = reshape(repmat(0*t,1,length(Dp0)),[k,length(Dp0)])';   %
+Dp = [Dp zeros(length(Dp0),1)];
 
 %% Numeric Integration
 
@@ -43,17 +43,15 @@ ylabel('Diameter (in)');
 
 %Numeric Integration for circular grain port
 tic;    %starts timer
-
-for j = 1:length(Dp0)                                                                   %for each intial diameter
-    Dp(j,1) = Dp0(j);                                                                   %assings inital diameter
-    dDp_dt = (2 ^ (2*n + 1) * a / pi^n) * ( (mox_dot(1)^n) / (Dp(j,1)^(2*n)));          %Euler integration
-    for i = 1:length(t)                                                                 %integration for burn time
-        Dp(j,i+1) = Dp(j,i) + dt*dDp_dt;                                                %Diameter at current time
-        dDp_dt = (2 ^ (2*n + 1) * a / pi^n) * ( (mox_dot(1+i)^n) / (Dp(j,1+i)^(2*n)));  %Euler integration   
+for j = 1:length(Dp0)
+    Dp(j,1) = Dp0(j);
+    dDp_dt = (2 ^ (2*n + 1) * a / pi^n) * ( (mox_dot(1)^n) / (Dp(j,1)^(2*n)));
+    for i = 1:length(t)
+        Dp(j,i+1) = Dp(j,i) + dt*dDp_dt;
+        dDp_dt = (2 ^ (2*n + 1) * a / pi^n) * ( (mox_dot(1+i)^n) / (Dp(j,1+i)^(2*n)));      
     end
-    plot(t,Dp(j,2:length(Dp(1,:))));                                                    %adds current diameter vector to graph
+    plot(t,Dp(j,2:length(Dp(1,:))));
 end
-
 toc;    %ends timer and prints run time
 
 L = 4*(Mox) ./ (pi*rho_p*(OF)* Dp(:,length(Dp(1,:))).^2 - Dp(:,1).^2);      %Calculates length based off of inital & final diameter and total mass
